@@ -1,0 +1,45 @@
+.notes__ {
+    &main-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    &app-bar {
+        align-items: center;
+        background-color: $primary;
+        color: $white;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px 10px 20px;
+    }
+    &content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 20px;
+    }
+    &title-input {
+        border: none;
+        color: $dark-gray;
+        font-size: 25px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        &:focus {
+            outline: none;
+        }
+    }
+    &textarea {
+        border: none;
+        color: $dark-gray;
+        font-size: 20px;
+        flex: 1 1 auto;
+        resize: none;
+        &:focus {
+            outline: none;
+        }
+    }
+    &image img {
+        box-shadow: 5px 5px $dark-gray;
+        height: 150px;
+    }
+}
