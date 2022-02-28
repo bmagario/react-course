@@ -1,21 +1,56 @@
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../auth/authContext";
-import { types } from "../../types/types";
+import validator from "validator";
+import { useForm } from "../../hooks/useForm";
+import { setError, removeError } from '../../actions/ui'
+import { startRegisterEmailPasswordLogin } from "../../actions/auth";
 
 export const RegisterScreen = () => {
-	const { dispatch } = useContext(AuthContext);
+	const dispatch = useDispatch();
+	const { msgError } = useSelector(state => state.ui);
 
-	// const navigate = useNavigate();
+	const [ formValues, handleInputChange ] = useForm({
+		name: '',
+		email: '',
+		password: '',
+		password2: ''
+	});
 
-	const handleRegister = () => {
-		dispatch({
-			type: types.register,
-			payload: { name: 'Brian Magario' }
-		});
+	const { name, email, password, password2 } = formValues;
 
-		const lastPath = localStorage.getItem('lastPath') || '/';
+	const isFormValid = () => {
+		if(name.trim().length === 0) {
+			dispatch(setError('Name is required'));
+			return false;
+		} else if(!validator.isEmail(email)) {
+			dispatch(setError('Email is not valid'));
+			return false;
+		} else if(password !== password2 || password.length < 5) {
+			dispatch(setError('Password dont match'));
+			return false;
+		}
+		dispatch(removeError());
+		return true;
+	};
+
+	const handleRegister = (e) => {
+		e.preventDefault();
+
+		if(isFormValid()) {
+			dispatch(
+				startRegisterEmailPasswordLogin(
+					name,
+					email,
+					password
+				)
+			)
+		}
+		// dispatch({
+		// 	type: types.register,
+		// 	payload: { name: 'Brian Magario' }
+		// });
+
+		// const lastPath = localStorage.getItem('lastPath') || '/';
 
 		// navigate(lastPath, {
 		// 	replace: true
@@ -26,14 +61,23 @@ export const RegisterScreen = () => {
 		<div className='container mt-5'>
 			<h3 className='auth__title'>Register</h3>
 
-			<form>
-
+			<form onSubmit={ handleRegister }>
+				{
+					msgError &&
+					(
+					<div className='auth__alert-error'>
+						{ msgError }
+					</div>
+					)
+				}
 				<input 
 					type='text'
 					placeholder='name'
 					name='name'
 					autoComplete='off'
 					className='auth__input'
+					value={ name }
+					onChange={ handleInputChange }
 				/>
 				<input 
 					type='text'
@@ -41,23 +85,30 @@ export const RegisterScreen = () => {
 					name='email'
 					autoComplete='off'
 					className='auth__input'
+					value={ email }
+					onChange={ handleInputChange }
 				/>
 				<input 
 					type='password'
 					placeholder='password'
 					name='password'
+					autoComplete='off'
 					className='auth__input'
+					value={ password }
+					onChange={ handleInputChange }
 				/>
 				<input 
 					type='password'
 					placeholder='confirm password'
 					name='password2'
+					autoComplete='off'
 					className='auth__input'
+					value={ password2 }
+					onChange={ handleInputChange }
 				/>
 				<button 
 					type='submit'
 					className='btn btn-primary btn-block'
-					onClick={ handleRegister }
 				>
 					Register
 				</button>

@@ -1,32 +1,51 @@
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../auth/authContext";
-import { types } from "../../types/types";
+import validator from "validator";
+import { signInWithGoogle, startLoginEmailPasswordLogin } from "../../actions/auth";
+import { removeError, setError } from "../../actions/ui";
+import { useForm } from '../../hooks/useForm';
+
 
 export const LoginScreen = () => {
-	const { dispatch } = useContext(AuthContext);
+	const dispatch = useDispatch();
+	const { loading } = useSelector(state => state.ui);
 
-	// const navigate = useNavigate();
 
-	const handleLogin = () => {
-		dispatch({
-			type: types.login,
-			payload: { name: 'Brian Magario' }
-		});
+	const [ formValues, handleInputChange ] = useForm({
+		email: 'brian2@gmail.com',
+		password: 'allday'
+	});
 
-		const lastPath = localStorage.getItem('lastPath') || '/';
+	const { email, password } = formValues; 
 
-		// navigate(lastPath, {
-		// 	replace: true
-		// });
+	const isFormValid = () => {
+		if(!validator.isEmail(email)) {
+			dispatch(setError('Email is not valid'));
+			return false;
+		} else if(password.length < 5) {
+			dispatch(setError('Password dont match'));
+			return false;
+		}
+		dispatch(removeError());
+		return true;
 	};
+
+	const handleLogin = (e) => {
+		e.preventDefault();
+		if(isFormValid()) {
+			dispatch(startLoginEmailPasswordLogin(email, password));
+		}
+	};
+
+	const handleGoogleLogin = () => {
+		dispatch(signInWithGoogle());
+	}
 
 	return (
 		<div className='container mt-5'>
 			<h3 className='auth__title'>Login</h3>
 
-			<form>
+			<form onSubmit={ handleLogin }>
 
 				<input 
 					type='text'
@@ -34,17 +53,21 @@ export const LoginScreen = () => {
 					name='email'
 					autoComplete='off'
 					className='auth__input'
+					value={ email }
+					onChange={ handleInputChange }
 					/>
 				<input 
 					type='password'
 					placeholder='password'
 					name='password'
 					className='auth__input'
+					value={ password }
+					onChange={ handleInputChange }
 				/>
 				<button 
 					type='submit'
 					className='btn btn-primary btn-block'
-					onClick={ handleLogin }
+					disabled={ loading }
 				>
 					Login
 				</button>
@@ -55,6 +78,7 @@ export const LoginScreen = () => {
 					<p>Login wih social networks</p>
 					<div 
 						className="google-btn"
+						onClick={ handleGoogleLogin }
 					>
 						<div className="google-icon-wrapper">
 							<img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
