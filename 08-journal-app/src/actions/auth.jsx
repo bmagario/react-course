@@ -9,6 +9,7 @@ import {
 	signOut
 } from '../firebase/firebase.config';
 import { types } from '../types/types';
+import { cleanNotes } from './notes';
 import { finishLoading, startLoading } from './ui';
 
 export const startRegisterEmailPasswordLogin = (name, email, password) => {
@@ -68,9 +69,10 @@ export const login = ( uid, displayName ) => ({
 });
 
 export const startLogout = () => {
-	return async dispatch => {
+	return async (dispatch) => {
 		await signOut(auth);
 		dispatch(logout());
+		dispatch(cleanNotes());
 	}
 };
 

@@ -11,12 +11,17 @@ import {
   onAuthStateChanged
 } from "firebase/auth";
 import {
-  getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
   addDoc,
+  collection,
+  doc,
+  deleteDoc,
+  getFirestore,
+  getDocs,
+  getDoc,
+  query,
+  setDoc,
+  updateDoc,
+  where,
 } from "firebase/firestore";
 
 // Your web app's Firebase configuration
@@ -43,15 +48,20 @@ export {
 	auth,
   collection,
   createUserWithEmailAndPassword,
+  doc,
 	db,
+  deleteDoc,
+	getDocs,
+  getDoc,
 	googleAuthProvider,
-	query,
+  onAuthStateChanged,
 	signInWithPopup,
 	signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
-	getDocs,
-  where,
+  setDoc,
+  query,
   updateProfile,
-  onAuthStateChanged
+  updateDoc,
+  where,
 }

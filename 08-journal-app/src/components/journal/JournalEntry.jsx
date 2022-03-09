@@ -1,9 +1,17 @@
-import React from 'react'
+import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { activeNote } from '../../actions/notes';
 
-export const JournalEntry = () => {
-	const url = 'https://www.zochagroup.com/wp-content/uploads/2020/03/ibiza-nightlife-destination-party-vacation.jpg';
-	return (
-		<div className='journal__entry'>
+export const JournalEntry = ({ id, title, body, date, url }) => {
+	const noteDate = moment(date);
+	const dispatch = useDispatch();
+
+	const handleEntryClick = () => {
+		dispatch(activeNote(id, { id, title, body, date, url }));
+	};
+
+ 	return (
+		<div className='journal__entry' onClick={ handleEntryClick }>
 			
 			<div
 				className='journal__entry-picture'
@@ -15,15 +23,15 @@ export const JournalEntry = () => {
 			</div>
 			<div className='journal__entry-body'>
 				<p className='journal__entry-title'>
-					Ejemplo titulo
+					{ title }
 				</p>
 				<p className='journal__entry-content'>
-					Ejemplo Content
+					{ body }
 				</p>
 			</div>
 			<div className='journal__entry-date-box'>
-				<span>Monday</span>
-				<h4>28-02-2022</h4>
+				<span>{ noteDate.format('dddd') }</span>
+				<h4>{ noteDate.format('DD-MM-yyyy') }</h4>
 			</div>
 		</div>
 	)
