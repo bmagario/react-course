@@ -8,7 +8,7 @@ const { check } = require('express-validator');
 const router = express.Router();
 
 const { register, login, renew } = require('../controllers/auth');
-const { validateFields } = require('../middlewares/auth-validator');
+const { validateFields } = require('../middlewares/field-validator');
 const { validateJWT } = require('../middlewares/jwt-validator');
 
 router.post(
